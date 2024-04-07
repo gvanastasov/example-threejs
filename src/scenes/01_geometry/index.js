@@ -4,6 +4,9 @@ const geometry = function ({ name, props }) {
     this.name = name;
     this.group = '3D Geometries';
     this.refs = {
+        /**
+         * @type {THREE.Mesh}
+         */
         geometry: null,
     }
     this.scene = () => {
@@ -15,8 +18,7 @@ const geometry = function ({ name, props }) {
     }
     this.onSceneGUI = (scene, rootElement) => {
         const recreateGeometry = () => {
-            let geometry = scene.children.find(child => child.uuid === this.refs.geometry);
-            scene.remove(geometry);
+            scene.remove(this.refs.geometry);
 
             const args = props.map(prop => {
                 if (prop.type === 'checkbox') {
@@ -66,9 +68,12 @@ const geometry = function ({ name, props }) {
         mesh.castShadow = true;
         mesh.receiveShadow = true;
 
-        this.refs.geometry = mesh.uuid;
+        this.refs.geometry = mesh;
         
         return mesh;
+    }
+    this.update = () => {
+        this.refs.geometry.rotateOnAxis(new THREE.Vector3(0, 1, 0), 0.01);
     }
     return this;
 }

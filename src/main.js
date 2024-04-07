@@ -17,6 +17,7 @@ function app() {
     });
     this._scene = null;
     this._camera = null;
+    this._activeScene = null;
 
     this.start = () => {
         this.configure();
@@ -113,16 +114,17 @@ function app() {
         });
     }
 
-    this.loadScene = ({ scene, onSceneGUI }) => {
+    this.loadScene = (scene) => {
+        this._activeScene = scene;
         const sceneGui = document.querySelector('#scene-gui');
         sceneGui.innerHTML = '';
 
         this.resetScene();
-        mergeScenes(scene(), this._scene);
+        mergeScenes(scene.scene(), this._scene);
         
-        if (onSceneGUI) {
+        if (scene.onSceneGUI) {
             sceneGui.style.display = 'block';
-            onSceneGUI(this._scene, document.querySelector('#scene-gui'));
+            scene.onSceneGUI(this._scene, document.querySelector('#scene-gui'));
         }
         else 
         {
@@ -191,6 +193,10 @@ function app() {
         requestAnimationFrame(() => {
             this.renderer.render(this._scene, this._camera);
             this.update();
+
+            if (this._activeScene?.update) {
+                this._activeScene.update(this._scene);
+            }
         });
     }
 }
