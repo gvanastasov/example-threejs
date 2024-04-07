@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 
-const geometry = function ({ name, props }) {
+const geometry = function ({ name, props, transform, animate }) {
     this.name = name;
     this.group = '3D Geometries';
     this.refs = {
@@ -65,6 +65,17 @@ const geometry = function ({ name, props }) {
         );
 
         mesh.position.set(0, 10, 0);
+
+        if (transform) {
+            if (transform.position) {
+                mesh.position = transform.position;
+            }
+
+            if (transform.rotation) {
+                mesh.rotation.setFromVector3(transform.rotation);
+            }
+        }
+
         mesh.castShadow = true;
         mesh.receiveShadow = true;
 
@@ -73,7 +84,9 @@ const geometry = function ({ name, props }) {
         return mesh;
     }
     this.update = () => {
-        this.refs.geometry.rotateOnAxis(new THREE.Vector3(0, 1, 0), 0.01);
+        if (animate && animate.rotation) {
+            this.refs.geometry.rotateOnAxis(animate.rotation, 0.01);
+        }
     }
     return this;
 }
@@ -84,7 +97,10 @@ const box = {
         { label: 'Width', name: 'width', value: 5, type: 'range', min: 1, max: 10 },
         { label: 'Height', name: 'height', value: 5, type: 'range', min: 1, max: 10 },
         { label: 'Depth', name: 'depth', value: 5, type: 'range', min: 1, max: 10 },
-    ]
+    ],
+    animate: {
+        rotation: new THREE.Vector3(0, 1, 0),
+    }
 }
 
 const sphere = {
@@ -107,7 +123,10 @@ const cylinder = {
         { label: 'Open Ended', name: 'openEnded', value: false, type: 'checkbox' },
         { label: 'Theta Start', name: 'thetaStart', value: 0, type: 'range', min: 0, max: 360, valueParser: (value) => value * Math.PI / 180 },
         { label: 'Theta Length', name: 'thetaLength', value: 360, type: 'range', min: 0, max: 360, valueParser: (value) => value * Math.PI / 180 },
-    ]
+    ],
+    animate: {
+        rotation: new THREE.Vector3(0, 1, 0),
+    }
 }
 
 const cone = {
@@ -121,6 +140,9 @@ const cone = {
         { label: 'Theta Start', name: 'thetaStart', value: 0, type: 'range', min: 0, max: 360, valueParser: (value) => value * Math.PI / 180 },
         { label: 'Theta Length', name: 'thetaLength', value: 360, type: 'range', min: 0, max: 360, valueParser: (value) => value * Math.PI / 180 },
     ],
+    animate: {
+        rotation: new THREE.Vector3(0, 1, 0),
+    }
 }
 
 const torus = {
@@ -132,6 +154,25 @@ const torus = {
         { label: 'Tubular Segments', name: 'tubularSegments', value: 100, type: 'range', min: 3, max: 100 },
         { label: 'Arc', name: 'arc', value: 360, type: 'range', min: 0, max: 360, valueParser: (value) => value * Math.PI / 180 },
     ],
+    animate: {
+        rotation: new THREE.Vector3(0, 1, 0),
+    }
+}
+
+const plane = {
+    name: 'Plane',
+    props: [
+        { label: 'Width', name: 'width', value: 5, type: 'range', min: 1, max: 20 },
+        { label: 'Height', name: 'height', value: 5, type: 'range', min: 1, max: 20 },
+        { label: 'Width Segments', name: 'widthSegments', value: 10, type: 'range', min: 1, max: 100 },
+        { label: 'Height Segments', name: 'heightSegments', value: 10, type: 'range', min: 1, max: 100 },
+    ],
+    transform: {
+        rotation: new THREE.Vector3(-Math.PI / 2, 0, 0),
+    },
+    animate: {
+        rotation: new THREE.Vector3(0, 0, 1),
+    }
 }
 
 export default [ 
@@ -140,4 +181,5 @@ export default [
     new geometry(cylinder), 
     new geometry(cone),
     new geometry(torus),
+    new geometry(plane),
 ];
