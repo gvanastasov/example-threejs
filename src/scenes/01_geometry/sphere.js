@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 
-const scene = (function() { 
+const scene = function() { 
     this.name = 'Sphere';
     this.group = '3D Geometries';
     this.refs = {
@@ -72,6 +72,6 @@ const scene = (function() {
     };
 
     return this;
-})();
+}
 
 export default scene;

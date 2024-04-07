@@ -1,70 +1,78 @@
 import * as THREE from 'three';
 
-const refs = {
-    box: null,
-};
-
-const scene = { 
-    name: 'Box',
-    group: '3D Geometries',
-    scene: () => {
+const scene = function () { 
+    this.name = 'Box';
+    this.group = '3D Geometries';
+    this.refs = {
+        box: null,
+    }
+    this.scene = () => {
         const scene = new THREE.Scene();
-
-        const box = new THREE.Mesh(
-            new THREE.BoxGeometry(5, 5, 5),
-            new THREE.MeshStandardMaterial({
-                color: 0xFF0000,
-            }));
-        box.position.set(0, 10, 0);
-        box.castShadow = true;
-        box.receiveShadow = true;
-        
-        refs.box = box.uuid;
-        
+        const box = this.createBox(5, 5, 5);
         scene.add(box);
         return scene;
     },
+
     /**
      * 
      * @param {THREE.Scene} scene
      * @param {HTMLElement} rootElement
      */
-    onSceneGUI(scene, rootElement) {
-        const box = scene.children.find(child => child.uuid === refs.box);
+    this.onSceneGUI = (scene, rootElement) => {
+        const recreateBox = () => {
+            let box = scene.children.find(child => child.uuid === this.refs.box);
+            scene.remove(box);
+
+            const width = parseFloat(guiDiv.querySelector('#width').value);
+            const height = parseFloat(guiDiv.querySelector('#height').value);
+            const depth = parseFloat(guiDiv.querySelector('#depth').value);
+
+            const newBox = this.createBox(width, height, depth);
+            scene.add(newBox);
+        }
+
+        const props = [
+            { label: 'Width', name: 'width', value: 5, type: 'range', min: 1, max: 10 },
+            { label: 'Height', name: 'height', value: 5, type: 'range', min: 1, max: 10 },
+            { label: 'Depth', name: 'depth', value: 5, type: 'range', min: 1, max: 10 },
+        ];
 
         const guiDiv = document.createElement('div');
-        guiDiv.innerHTML = `
-            <label for="width">Width:</label>
-            <input type="range" id="width" min="1" max="10" value="5">
-            <br>
-            <label for="height">Height:</label>
-            <input type="range" id="height" min="1" max="10" value="5">
-            <br>
-            <label for="depth">Depth:</label>
-            <input type="range" id="depth" min="1" max="10" value="5">
-        `;
 
-        // Event listeners to update the box dimensions
-        const widthSlider = guiDiv.querySelector('#width');
-        const heightSlider = guiDiv.querySelector('#height');
-        const depthSlider = guiDiv.querySelector('#depth');
-        
-        widthSlider.addEventListener('input', () => {
-            const value = parseFloat(widthSlider.value);
-            box.scale.x = value / 5;
-        });
-        
-        heightSlider.addEventListener('input', () => {
-            const value = parseFloat(heightSlider.value);
-            box.scale.y = value / 5;
-        });
-        
-        depthSlider.addEventListener('input', () => {
-            const value = parseFloat(depthSlider.value);
-            box.scale.z = value / 5;
+        props.forEach(prop => {
+            const label = document.createElement('label');
+            label.htmlFor = prop.name;
+            label.textContent = prop.label;
+
+            const input = document.createElement('input');
+            input.type = prop.type;
+            input.id = prop.name;
+            input.min = prop.min;
+            input.max = prop.max;
+            input.value = prop.value;
+            input.addEventListener('input', recreateBox);
+
+            guiDiv.appendChild(label);
+            guiDiv.appendChild(input);
+            guiDiv.appendChild(document.createElement('br'));
         });
 
         rootElement.appendChild(guiDiv);
+    }
+
+    this.createBox = (width, height, depth) => {
+        const box = new THREE.Mesh(
+            new THREE.BoxGeometry(width, height, depth),
+            new THREE.MeshStandardMaterial({
+                color: 0xFF0000,
+            }));
+
+        box.position.set(0, 10, 0);
+        box.castShadow = true;
+        box.receiveShadow = true;
+
+        this.refs.box = box.uuid;
+        return box;
     }
 };
 

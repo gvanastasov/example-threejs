@@ -2,6 +2,13 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { scenes } from './scenes';
 
+const scenesInternal = scenes.map(x => {
+    if (x instanceof Function) {
+        return new x();
+    }
+    return x;
+});
+
 function app() {
     this._el = document.getElementById('app');
 
@@ -13,7 +20,7 @@ function app() {
 
     this.start = () => {
         this.configure();
-        this.loadScene(scenes[0]);
+        this.loadScene(scenesInternal[0]);
         this.update();
     }
 
@@ -41,8 +48,8 @@ function app() {
 
     this.createMenu = () => {
         const menu = document.createElement('ul');
-
-        var groups = scenes.reduce((arr, scene) => {
+        
+        var groups = scenesInternal.reduce((arr, scene) => {
             const existing = arr.find(group => group.name === scene.group);
             if (!existing) {
                 arr.push({ name: scene.group, scenes: [ scene ] });
