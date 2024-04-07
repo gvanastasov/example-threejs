@@ -159,6 +159,21 @@ const torus = {
     }
 }
 
+const ring = {
+    name: 'Ring',
+    props: [
+        { label: 'Inner Radius', name: 'innerRadius', value: 2, type: 'range', min: 1, max: 10 },
+        { label: 'Outer Radius', name: 'outerRadius', value: 6, type: 'range', min: 1, max: 10 },
+        { label: 'Theta Segments', name: 'thetaSegments', value: 8, type: 'range', min: 3, max: 32 },
+        { label: 'Phi Segments', name: 'phiSegments', value: 8, type: 'range', min: 3, max: 32 },
+        { label: 'Theta Start', name: 'thetaStart', value: 0, type: 'range', min: 0, max: 360, valueParser: (value) => value * Math.PI / 180 },
+        { label: 'Theta Length', name: 'thetaLength', value: 360, type: 'range', min: 0, max: 360, valueParser: (value) => value * Math.PI / 180 },
+    ],
+    animate: {
+        rotation: new THREE.Vector3(0, 1, 0),
+    }
+}
+
 const plane = {
     name: 'Plane',
     props: [
@@ -225,6 +240,7 @@ export default [
     new geometry(cylinder), 
     new geometry(cone),
     new geometry(torus),
+    new geometry(ring),
     new geometry(plane),
     new geometry(tetrahedron),
     new geometry(octahedron),
