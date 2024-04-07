@@ -157,6 +157,18 @@ const torus = {
     }
 }
 
+const torusKnot = {
+    name: 'TorusKnot',
+    props: [
+        { label: 'Radius', name: 'radius', value: 5, type: 'range', min: 1, max: 10 },
+        { label: 'Tube', name: 'tube', value: 1, type: 'range', min: 1, max: 10 },
+        { label: 'Tubular Segments', name: 'tubularSegments', value: 64, type: 'range', min: 3, max: 100 },
+        { label: 'Radial Segments', name: 'radialSegments', value: 8, type: 'range', min: 3, max: 32 },
+        { label: 'P', name: 'p', value: 2, type: 'range', min: 1, max: 10 },
+        { label: 'Q', name: 'q', value: 3, type: 'range', min: 1, max: 10 },
+    ],
+}
+
 const ring = {
     name: 'Ring',
     props: [
@@ -238,6 +250,7 @@ export default [
     new geometry(cylinder), 
     new geometry(cone),
     new geometry(torus),
+    new geometry(torusKnot),
     new geometry(ring),
     new geometry(plane),
     new geometry(tetrahedron),
