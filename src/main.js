@@ -13,7 +13,7 @@ function app() {
 
     this.start = () => {
         this.configure();
-        this.loadScene(scenes[0].scene);
+        this.loadScene(scenes[0]);
         this.update();
     }
 
@@ -27,7 +27,11 @@ function app() {
         menu.id = 'menu';
         menu.appendChild(this.createMenu());
 
+        var sceneGuiElement = document.createElement('div');
+        sceneGuiElement.id = 'scene-gui';
+
         this._el.appendChild(menu);
+        this._el.appendChild(sceneGuiElement);
         this._el.appendChild(this.renderer.domElement);
     
         window.addEventListener('resize', () => {
@@ -74,8 +78,12 @@ function app() {
                 const a = document.createElement('a');
                 a.href = '#' + scene.name;
                 a.innerHTML = scene.name;
-                a.onclick = () => {
-                    this.loadScene(scene.scene);
+                sceneElement.onclick = () => {
+                    this.loadScene(scene);
+
+                    const selectedItems = document.querySelectorAll('#menu .selected');
+                    selectedItems.forEach(item => item.classList.remove('selected'));
+                    sceneElement.classList.add('selected');
                 }
 
                 sceneElement.appendChild(a);
@@ -94,15 +102,25 @@ function app() {
 
     function mergeScenes(sourceScene, destinationScene) {
         sourceScene.children.forEach(child => {
-            var clonedObject = child.clone();
-    
-            destinationScene.add(clonedObject);
+            destinationScene.add(child);
         });
     }
 
-    this.loadScene = (scene) => {
+    this.loadScene = ({ scene, onSceneGUI }) => {
+        const sceneGui = document.querySelector('#scene-gui');
+        sceneGui.innerHTML = '';
+
         this.resetScene();
         mergeScenes(scene(), this._scene);
+        
+        if (onSceneGUI) {
+            sceneGui.style.display = 'block';
+            onSceneGUI(this._scene, document.querySelector('#scene-gui'));
+        }
+        else 
+        {
+            sceneGui.style.display = 'none';
+        }
     }
 
     this.resetScene = () => {
@@ -165,7 +183,6 @@ function app() {
     this.update = () => {
         requestAnimationFrame(() => {
             this.renderer.render(this._scene, this._camera);
-            // console.log(this._camera.rotation);
             this.update();
         });
     }

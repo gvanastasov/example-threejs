@@ -1,13 +1,13 @@
 import * as THREE from 'three';
 
 const scene = { 
-    name: 'test1',
-    group: 'Geometry',
+    name: 'Sphere',
+    group: '3D Geometries',
     scene: () => {
         const scene = new THREE.Scene();
 
         const box = new THREE.Mesh(
-            new THREE.BoxGeometry(5, 5, 5),
+            new THREE.SphereGeometry(5, 32, 32),
             new THREE.MeshStandardMaterial({
                 color: 0xFF0000,
             }));
