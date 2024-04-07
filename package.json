@@ -1,0 +1,27 @@
+{
+  "name": "example-threejs",
+  "version": "1.0.0",
+  "description": "A dummy example showcasing how to work with threejs - a ready made popular solution for webgl",
+  "scripts": {
+    "start": "parcel",
+    "build": "parcel build"
+  },
+  "source": "src/index.html",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gvanastasov/example-threejs.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/gvanastasov/example-threejs/issues"
+  },
+  "homepage": "https://github.com/gvanastasov/example-threejs#readme",
+  "devDependencies": {
+    "parcel": "^2.12.0"
+  },
+  "dependencies": {
+    "three": "^0.163.0"
+  }
+}
