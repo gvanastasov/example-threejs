@@ -186,6 +186,39 @@ const tetrahedron = {
     }
 }
 
+const octahedron = {
+    name: 'Octahedron',
+    props: [
+        { label: 'Radius', name: 'radius', value: 5, type: 'range', min: 1, max: 10 },
+        { label: 'Detail', name: 'detail', value: 0, type: 'range', min: 0, max: 5 },
+    ],
+    animate: {
+        rotation: new THREE.Vector3(0, 1, 0),
+    }
+}
+
+const dodecahedron = {
+    name: 'Dodecahedron',
+    props: [
+        { label: 'Radius', name: 'radius', value: 5, type: 'range', min: 1, max: 10 },
+        { label: 'Detail', name: 'detail', value: 0, type: 'range', min: 0, max: 5 },
+    ],
+    animate: {
+        rotation: new THREE.Vector3(0, 1, 0),
+    }
+}
+
+const icosahedron = {
+    name: 'Icosahedron',
+    props: [
+        { label: 'Radius', name: 'radius', value: 5, type: 'range', min: 1, max: 10 },
+        { label: 'Detail', name: 'detail', value: 0, type: 'range', min: 0, max: 5 },
+    ],
+    animate: {
+        rotation: new THREE.Vector3(0, 1, 0),
+    }
+}
+
 export default [ 
     new geometry(box), 
     new geometry(sphere), 
@@ -194,4 +227,7 @@ export default [
     new geometry(torus),
     new geometry(plane),
     new geometry(tetrahedron),
+    new geometry(octahedron),
+    new geometry(dodecahedron),
+    new geometry(icosahedron),
 ];
