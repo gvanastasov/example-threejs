@@ -108,20 +108,13 @@ function app() {
         return menu;
     }
 
-    function mergeScenes(sourceScene, destinationScene) {
-        sourceScene.children.forEach(child => {
-            destinationScene.add(child);
-        });
-    }
-
     this.loadScene = (scene) => {
+        this.resetScene();
         this._activeScene = scene;
+        scene.start(this._scene);
+        
         const sceneGui = document.querySelector('#scene-gui');
         sceneGui.innerHTML = '';
-
-        this.resetScene();
-        mergeScenes(scene.scene(), this._scene);
-        
         if (scene.onSceneGUI) {
             sceneGui.style.display = 'block';
             scene.onSceneGUI(this._scene, document.querySelector('#scene-gui'));

@@ -1,4 +1,6 @@
 import Geometry from './01_geometry';
-const scenes = [ ...Geometry ];
+import Helpers from './10_helpers';
+
+const scenes = [ ...Geometry, ...Helpers ];
 
 export { scenes };

@@ -9,12 +9,10 @@ const geometry = function ({ name, props, transform, animate }) {
          */
         geometry: null,
     }
-    this.scene = () => {
-        const scene = new THREE.Scene();
+    this.start = (scene) => {
         const args = props.map(prop => prop.valueParser ? prop.valueParser(prop.value) : prop.value);
         const geometry = this.createGeometry(args);
         scene.add(geometry);
-        return scene;
     }
     this.onSceneGUI = (scene, rootElement) => {
         const recreateGeometry = () => {
