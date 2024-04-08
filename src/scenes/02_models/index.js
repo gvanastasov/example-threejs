@@ -6,8 +6,8 @@ const loader = new GLTFLoader();
 let url = new URL( './model.gltf', import.meta.url );
 
 const loaderExample = function() {
-    this.name = 'Model',
-    this.group = 'Loaders',
+    this.name = 'Loader',
+    this.group = 'Models',
     this.refs = {
         /**
          * @type {THREE.Mesh}

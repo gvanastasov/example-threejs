@@ -1,10 +1,10 @@
 import Geometry from './01_geometry';
-import Loaders from './09_loaders';
+import Models from './02_models';
 import Helpers from './10_helpers';
 
 const scenes = [ 
     ...Geometry, 
-    ...Loaders,
+    ...Models,
     ...Helpers,
 ];
 
