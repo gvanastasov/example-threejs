@@ -72,7 +72,7 @@ const textureExample = function() {
         }
     }
     this.onSceneGUI = (scene, rootElement) => {
-        const licenseMarkup = '<p>This work is based on <a href="https://sketchfab.com/3d-models/crate-15581c596def402db1196f92de5c5757">"Crate"</a> by <a href="https://sketchfab.com/cooper">cooper</a>.</p>';
+        const licenseMarkup = '<p>This work is based on <a href="https://sketchfab.com/3d-models/crate-15581c596def402db1196f92de5c5757">"Crate"</a> by <a href="https://sketchfab.com/cooper">cooper</a> licensed under CC-BY-4.0.</p>';
         const licenseDiv = document.createElement('div');
         licenseDiv.innerHTML = licenseMarkup;
         rootElement.appendChild(licenseDiv);
@@ -80,4 +80,65 @@ const textureExample = function() {
     return this;
 }
 
-export default [ new loaderExample(), new textureExample()];
+const animationExample = function() {
+    this.name = 'Animation';
+    this.group = 'Models';
+    this.refs = {
+        /**
+         * @type {THREE.Mesh}
+         */
+        model: null,
+        /**
+         * @type {Function}
+         */
+        animation: null,
+    }
+    this.start = (scene) => {
+        loader.load('static/robot_walk_animation/scene.gltf', ( gltf ) => {
+            const model = gltf.scene.children[0];
+            if (!model) {
+                return;
+            }
+            model.scale.set(0.5, 0.5, 0.5);
+            model.traverse( function ( child ) {
+                if ( child.isMesh ) {
+                    child.castShadow = true;
+                    child.receiveShadow = true;
+                }
+            });
+            this.refs.model = model;
+
+            const animations = gltf.animations;
+            if (animations && animations.length) {
+                const mixer = new THREE.AnimationMixer(gltf.scene);
+
+                animations.forEach((clip) => {
+                    mixer.clipAction(clip).play();
+                });
+
+                const clock = new THREE.Clock();
+                this.refs.animation = () => {
+                    const delta = clock.getDelta();
+                    mixer.update(delta);
+                };
+            }
+
+            scene.add(gltf.scene);
+        }, undefined, function ( error ) {
+            console.error( error );
+        } );
+    }
+    this.update = () => {
+        this.refs.animation?.call();
+        this.refs.model?.rotateOnAxis(new THREE.Vector3(0,0,1), 0.01);
+    }
+    this.onSceneGUI = (scene, rootElement) => {
+        const licenseMarkup = '<p>This work is based on <a href="https://sketchfab.com/3d-models/robot-walk-animation-40e2de1d942f43eca60e2344c5e91d12">"Robot walk animation"</a> by <a href="https://sketchfab.com/AntijnvanderGun">AntijnvanderGun</a> licensed under CC-BY-4.0.</p>';
+        const licenseDiv = document.createElement('div');
+        licenseDiv.innerHTML = licenseMarkup;
+        rootElement.appendChild(licenseDiv);
+    }
+    return this;
+}
+
+export default [ new loaderExample(), new textureExample(), new animationExample()];
