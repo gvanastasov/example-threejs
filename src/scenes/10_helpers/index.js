@@ -53,4 +53,4 @@ const edges = function() {
     return this;
 }
 
-export default [ edges() ];
+export default [ new edges() ];
