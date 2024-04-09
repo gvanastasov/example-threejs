@@ -2,7 +2,7 @@ import * as THREE from 'three';
 import sceneView from '../scene-view';
 import transformControl from '../../controls/transform-control';
 
-const transform = sceneView({
+const transform = new sceneView({
     name: 'Transform Controls',
     group: 'Helpers',
     refs: {

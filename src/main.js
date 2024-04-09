@@ -41,7 +41,7 @@ function app() {
         this._el.appendChild(menu);
         this._el.appendChild(sceneGuiElement);
         this._el.appendChild(this.renderer.domElement);
-    
+
         window.addEventListener('resize', () => {
             this._handleWindowResize();
         }, false);
@@ -136,6 +136,7 @@ function app() {
         this._camera.updateProjectionMatrix();
 
         this._scene = new THREE.Scene();
+        this._scene.camera = this._camera;
 
         let light = new THREE.DirectionalLight(0xFFFFFF, 1.0);
         light.position.set(20, 100, 10);
@@ -183,14 +184,13 @@ function app() {
     }
 
     this.update = () => {
-        requestAnimationFrame(() => {
-            this.renderer.render(this._scene, this._camera);
-            this.update();
+        requestAnimationFrame(this.update);
 
-            if (this._activeScene?.update) {
-                this._activeScene.update(this._scene);
-            }
-        });
+        if (this._activeScene?.update) {
+            this._activeScene.update(this._scene);
+        }
+
+        this.renderer.render(this._scene, this._camera);
     }
 }
 
