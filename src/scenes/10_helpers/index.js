@@ -1,4 +1,37 @@
 import * as THREE from 'three';
+import transformControl from '../../controls/transform-control';
+
+const transform = function() {
+    this.name = 'Transform Controls';
+    this.group = 'Helpers';
+
+    this.refs = {
+        /**
+         * @type {THREE.Object3D}
+        */
+        object: null,
+    }
+
+    this.start = (scene) => {
+        const geometry = new THREE.BoxGeometry(5, 5, 5);
+        const material = new THREE.MeshStandardMaterial({
+            color: 0xFF0000,
+        });
+        const mesh = new THREE.Mesh(geometry, material);
+        mesh.position.set(0, 10, 0);
+        mesh.castShadow = true;
+        mesh.receiveShadow = true;
+        scene.add(mesh);
+
+        this.refs.object = mesh;
+    }
+
+    this.onSceneGUI = (scene, rootElement) => {
+        const transform = transformControl(this.refs.object);
+
+        rootElement.appendChild(transform);
+    }
+}
 
 const edges = function() {
     this.name = 'Edges';
@@ -53,4 +86,4 @@ const edges = function() {
     return this;
 }
 
-export default [ new edges() ];
+export default [ new edges(), new transform() ];
