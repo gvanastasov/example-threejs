@@ -1,18 +1,17 @@
 import * as THREE from 'three';
+import sceneView from '../scene-view';
 import transformControl from '../../controls/transform-control';
 
-const transform = function() {
-    this.name = 'Transform Controls';
-    this.group = 'Helpers';
-
-    this.refs = {
+const transform = sceneView({
+    name: 'Transform Controls',
+    group: 'Helpers',
+    refs: {
         /**
          * @type {THREE.Object3D}
         */
         object: null,
-    }
-
-    this.start = (scene) => {
+    },
+    start: function(scene) {
         const geometry = new THREE.BoxGeometry(5, 5, 5);
         const material = new THREE.MeshStandardMaterial({
             color: 0xFF0000,
@@ -22,16 +21,14 @@ const transform = function() {
         mesh.castShadow = true;
         mesh.receiveShadow = true;
         scene.add(mesh);
-
+    
         this.refs.object = mesh;
-    }
-
-    this.onSceneGUI = (scene, rootElement) => {
+    },
+    onSceneGUI: function(scene, rootElement) {
         const transform = transformControl(this.refs.object);
-
         rootElement.appendChild(transform);
     }
-}
+});
 
 const edges = function() {
     this.name = 'Edges';
@@ -86,4 +83,4 @@ const edges = function() {
     return this;
 }
 
-export default [ new edges(), new transform() ];
+export default [ new edges(), transform];
