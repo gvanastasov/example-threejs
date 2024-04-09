@@ -56,7 +56,7 @@ const raycast = new sceneView({
         this.refs.raycaster.layers.set(1);
         this.refs.pointer = new THREE.Vector2();
 
-        document.addEventListener( 'click', (event ) => {
+        document.querySelector('canvas')?.addEventListener( 'click', (event ) => {
             event.preventDefault();
             this.refs.pointer.x = ( event.clientX / window.innerWidth ) * 2 - 1;
             this.refs.pointer.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
