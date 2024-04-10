@@ -1,6 +1,8 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { TransformControls } from 'three/examples/jsm/controls/TransformControls';
+import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer';
+import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass';
 import { scenes } from './scenes';
 
 const scenesInternal = scenes.map(x => {
@@ -16,6 +18,7 @@ function app() {
     this.renderer = new THREE.WebGLRenderer({
         antialias: true
     });
+    this._composer = null;
     this._scene = null;
     this._camera = null;
     this._activeScene = null;
@@ -124,6 +127,10 @@ function app() {
         {
             sceneGui.style.display = 'none';
         }
+
+        if (scene.configurePostRender) {
+            scene.configurePostRender(this._composer);
+        }
     }
 
     this.resetScene = () => {
@@ -207,6 +214,9 @@ function app() {
         plane.receiveShadow = true;
         plane.rotation.x = -Math.PI / 2;
         this._scene.add(plane);
+
+        this._composer = new EffectComposer(this.renderer);
+        this._composer.addPass(new RenderPass(this._scene, this._camera));
     }
 
     this._handleWindowResize = () => {
@@ -224,7 +234,7 @@ function app() {
 
         this._scene.controls.active?.update?.call();
 
-        this.renderer.render(this._scene, this._camera);
+        this._composer.render();
     }
 }
 
