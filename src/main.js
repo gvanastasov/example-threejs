@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+import { TransformControls } from 'three/examples/jsm/controls/TransformControls';
 import { scenes } from './scenes';
 
 const scenesInternal = scenes.map(x => {
@@ -137,6 +138,7 @@ function app() {
 
         this._scene = new THREE.Scene();
         this._scene.camera = this._camera;
+        this._scene.renderer = this.renderer;
 
         let light = new THREE.DirectionalLight(0xFFFFFF, 1.0);
         light.position.set(20, 100, 10);
@@ -158,9 +160,39 @@ function app() {
         light = new THREE.AmbientLight(0x101010);
         this._scene.add(light);
 
-        const controls = new OrbitControls(
-            this._camera, this.renderer.domElement);
-        controls.update();
+        const controls = function (scene, camera, el) {
+            this.active = null;
+            this.orbit = new OrbitControls(camera, el);
+            this.orbit.enabled = false;
+            this.transform = new TransformControls(camera, el);
+
+            this.activate = ((control, args) => {
+                if (this.active) {
+                    this.active.detach?.call();
+                    this.active.enabled = false;
+                    scene.remove(this.active);
+                }
+
+                switch (control) {
+                    case 'orbit':
+                        this.active = this.orbit;
+                        break;
+                    case 'transform':
+                        const { target } = args;
+                        this.active = this.transform;
+                        this.active.attach(target);
+                        scene.add(this.active);
+                        break;
+                }
+
+                this.active.enabled = true;
+            });
+
+            return this;
+        }
+
+        this._scene.controls = new controls(this._scene, this._camera, this.renderer.domElement);
+        this._scene.controls.activate('orbit');
 
         this._camera.position.set(50, 50, -50);
         this._camera.lookAt(0, 0, 0);
@@ -189,6 +221,8 @@ function app() {
         if (this._activeScene?.update) {
             this._activeScene.update(this._scene);
         }
+
+        this._scene.controls.active?.update?.call();
 
         this.renderer.render(this._scene, this._camera);
     }
